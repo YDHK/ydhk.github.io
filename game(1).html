@@ -48,14 +48,14 @@
     <script>
         var canvas = document.getElementById("mycanvas");
         var ctx = canvas.getContext('2d');
-        //鍒濆&#59216;鍖栧湴鍥?
+        //Initialize the map
         var map = [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0],
             [0, 0, 0, 0]
         ];
-        //涓嶅悓鏁板瓧鐨勯&#58753;鑹蹭俊鎭?
+        //Color information for difference number
         var num_color = {
             0: "#ccc0b3",
             2: "#eee4da",
@@ -70,7 +70,7 @@
             1024: "#a8832b",
             2048: "#86aa9c"
         };
-        //涓嶅悓鏁板瓧鐨勫ぇ灏忎俊�?       
+        //Size for difference number       
         var num_size = {
             0: "60",
             2: "60",
@@ -85,7 +85,7 @@
             1024: "40",
             2048: "40"
         };
-        //涓嶅悓鏁板瓧鐨勫亸绉婚噺锛堜负浜嗗皢鏁板瓧鐢诲湪鏂瑰潡涓&#57694;績锛?       
+        //Location information for different numbers     
         var offsetx = {
             0: 53,
             2: 53,
@@ -100,14 +100,14 @@
             1024: 24,
             2048: 25
         };
-        //涓婁笅�&#57743;﹀彸閿&#57790;殑code瀵瑰簲鐨�&#57601;��鍚戜俊鎭?       
+        //code for up, down, left, and right keys  
         var keycom = {
             '38': [0, -1],
             '40': [0, 1],
             '37': [-1, 0],
             '39': [1, 0]
         }
-        //space琛ㄧず褰撳�&#58757;鍓╀綑鐨�&#57691;��鏍煎潡鏁�&#57790;��score琛ㄧず褰撳�&#58757;鐨勫垎鏁?
+        //space indicates the current number of remaining space blocks, and score indicates the current score
         var space = 16,
             score = 0;
 
@@ -148,7 +148,7 @@
         }
 
         function move(dir) {
-            //�&#59244;��潵璋冩暣涓嶅悓鏂瑰悜鐨勯亶鍘嗘柟�?
+            //用来调整不同方向的遍历方式
             function modify(x, y) {
                 tx = x, ty = y;
                 if(dir[0] == 0) tx = [ty, ty = tx][0];
@@ -156,7 +156,7 @@
                 if(dir[0] > 0) ty = 3 - ty;
                 return [tx, ty];
             }
-            //鏍�&#59209;嵁绉诲姩鐨勬柟鍚�&#57884;��灏嗗湴鍥句腑瀵瑰簲琛?鍒椾腑鐨�&#57601;��瀛椾竴涓&#57411;釜鍘�&#57412;��鏍堜腑锛�?#59111;鏋滅&#57543;涓€娆￠亣鍒版爤椤舵暟瀛�&#59013;拰�&#57829;�&#57694;��鏍堟暟瀛�&#59016;浉绛夛紝鍒欐爤椤舵暟瀛椾�?锛屾渶鍚庣敤鏍堜腑鏁板瓧鏇存柊鍦板浘�?#57696;殑瀵瑰簲琛?�?
+            //根据移动的方向，将地图中对应行/列中的数字一个个压入栈中，如果第一次遇到栈顶数字和待入栈数字相等，则栈顶数字乘2，最后用栈中数字更新地图中的对应行/列
             for(var i = 0; i < 4; i++) {
                 var tmp = Array();
                 var isadd = false;
@@ -175,7 +175,7 @@
                 }
             }
             produce();
-            if(space == 0) alert("game over" + String(score));
+            if(space == 0) alert("game over \nYou got " + String(score) + " Point");
             draw();
         }
         produce();
@@ -193,11 +193,11 @@
             var touch = event.touches[0];
             ex = touch.clientX, ey = touch.clientY;
             dx = ex - sx, dy = ey - sy;
-            //绂佹&#57627;榛�&#59336;&#57723;鐨勬粦鍔ㄤ簨�?
+            //Disable the default swipe event
             event.preventDefault();
         }
         canvas.ontouchend = function(event) {
-            //鏍�&#59209;嵁妯&#57414;旱鍧�&#57696;��浣嶇Щ鍒ゆ柇�&#59368;戝姩鏂瑰�?
+            //Judging the sliding direction according to the horizontal and vertical coordinate displacement
             if(dy < -50 && Math.abs(dy / dx) > 2) move([0, -1]);
             if(dy > 50 && Math.abs(dy / dx) > 2) move([0, 1]);
             if(dx < -50 && Math.abs(dx / dy) > 2) move([-1, 0]);
